@@ -33,3 +33,81 @@ public class LibrarySystemManagement {
         }
     }
 }
+// borrow book
+public static void borrowBook() {
+
+        // Ask for the Book ID
+        String inputBookId = JOptionPane.showInputDialog(
+            null, "Enter Book ID to borrow:"
+        );
+
+        // Check if the input is empty or cancelled
+        if (inputBookId == null ||
+            inputBookId.trim().isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                null, "Invalid Book ID!", "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        // Search for the Book ID
+        for (int i = 0; i < bookCount; i++) {
+
+            if (bIds[i].equalsIgnoreCase(inputBookId.trim())) {
+
+                // Check if the book is available
+                if (bkAvailable[i]) {
+
+                    // Ask for the borrower's name
+                    String borrower = JOptionPane.showInputDialog(
+                        null, "Enter Borrower's Name:"
+                    );
+
+                    // Validate borrower's name
+                    if (borrower == null ||
+                        borrower.trim().isEmpty()) {
+
+                        JOptionPane.showMessageDialog(
+                            null, "Invalid Borrower's Name!",
+                            "Error", JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    }
+
+                    // Update book status and borrower
+                    bBorrower[i] = borrower.trim();
+                    bkAvailable[i] = false;
+
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Book borrowed successfully!\n" +
+                        "Book Title: " + bTitles[i] + "\n" +
+                        "Author: " + bAuthors[i] + "\n" +
+                        "Borrower: " + bBorrower[i],
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+
+                    return;
+
+                } else {
+
+                    // Book is already borrowed
+                    JOptionPane.showMessageDialog(
+                        null, "This book is already borrowed!",
+                        "Unavailable", JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+            }
+        }
+
+        // Book ID was not found
+        JOptionPane.showMessageDialog(
+            null, "Book ID not found!",
+            "Error", JOptionPane.ERROR_MESSAGE
+        );
+    }
+}
