@@ -1,0 +1,88 @@
+package Finals1stSem;
+
+import javax.swing.JOptionPane;
+
+public class LibrarySystemManagement {
+
+    static final int MAX = 100;
+    static String[] bIds = new String[MAX];
+    static String[] bTitles = new String[MAX];
+    static String[] bAuthors = new String[MAX];
+    static boolean[] bkAvailable = new boolean[MAX];
+    static String[] bBorrower = new String[MAX];   
+    static int bookCount = 0;
+
+    public static void main(String[] args) {
+        String inputBookId = JOptionPane.showInputDialog(null, "Enter Book ID:");
+        String inputBookTitle = JOptionPane.showInputDialog(null, "Enter Book Title:");
+        String inputBookAuthor = JOptionPane.showInputDialog(null, "Enter Book Author:");
+
+        if (inputBookId == null || inputBookId.trim().isEmpty() ||
+            inputBookTitle == null || inputBookTitle.trim().isEmpty() ||
+            inputBookAuthor == null || inputBookAuthor.trim().isEmpty()) {
+            
+            JOptionPane.showMessageDialog(null, "Validation Failed!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            bIds[bookCount] = inputBookId;
+            bTitles[bookCount] = inputBookTitle;
+            bAuthors[bookCount] = inputBookAuthor;
+            bkAvailable[bookCount] = true;
+            bookCount++;
+
+            JOptionPane.showMessageDialog(null, "Record added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+}
+
+public static void returnBook() {
+        // Input member details (Member ID or Name) and book id
+        String memberInput = JOptionPane.showInputDialog(null, "Enter Member ID or Name:", "Return Book", JOptionPane.QUESTION_MESSAGE);
+        if (memberInput == null) return;
+
+        String bookIdInput = JOptionPane.showInputDialog(null, "Enter Book ID:", "Return Book", JOptionPane.QUESTION_MESSAGE);
+        if (bookIdInput == null) return;
+
+        int bookIndex = -1;
+        // Find the book
+        for (int i = 0; i < bookCount; i++) {
+            if (bIds[i] != null && bIds[i].equalsIgnoreCase(bookIdInput.trim())) {
+                bookIndex = i;
+                break;
+            }
+        }
+
+        if (bookIndex != -1) {
+            // Verify if the book belongs/was borrowed by this member (via ID or Borrower name match)
+            boolean memberMatch = (bBorrower[bookIndex] != null && 
+                (bBorrower[bookIndex].equalsIgnoreCase(memberInput.trim()) || 
+                 getMemberName(bBorrower[bookIndex]).equalsIgnoreCase(memberInput.trim())));
+
+            if (memberMatch || !bkAvailable[bookIndex]) {
+                if (!bkAvailable[bookIndex]) {
+                    // Update book status to available and record the return
+                    bkAvailable[bookIndex] = true;
+                    bBorrower[bookIndex] = null; // Clear borrower record
+                    
+                    // Show Message "Book Returned Successfully"
+                    JOptionPane.showMessageDialog(null, "Book \"Returned Successfully\"", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Notice: This book is already available.", "Notice", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: This book was not borrowed by this member.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            // Error message if book not found
+            JOptionPane.showMessageDialog(null, "Error: No Book Found with ID: " + bookIdInput, "Not Found", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Helper method to look up member name by ID
+    private static String getMemberName(String mId) {
+        for (int i = 0; i < mCount; i++) {
+            if (mIds[i] != null && mIds[i].equalsIgnoreCase(mId)) {
+                return mNames[i];
+            }
+        }
+        return "";
+    }
